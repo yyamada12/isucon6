@@ -1,0 +1,14 @@
+/*
+!/.gitignore
+!/.gitconfig
+!/.bashrc
+!/.tmux.conf
+!/alp.yml
+!/env.sh
+!/webapp
+/webapp/*
+!/webapp/go/
+!/webapp/public/
+/webapp/go/src/
+/webapp/go/pkg/
+/webapp/go/bin

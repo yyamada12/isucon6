@@ -16,7 +16,7 @@ echo "Started deploying."
 ./rotate_log.sh /var/log/mysql/mysqld.log
 ./rotate_log.sh /var/log/mysql/slow.log
 
-./rotate_log.sh ../log/cpu.pprof
+./rotate_log.sh ~/pprof/pprof.png
 
 # build go app
 cd ..

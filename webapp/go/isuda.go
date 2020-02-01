@@ -105,7 +105,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	entries := make([]*Entry, 0, 10)
 	for rows.Next() {
 		e := Entry{}
-		err := rows.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt)
+		err := rows.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt, &e.KeywordLength)
 		panicIf(err)
 		e.Html = htmlify(w, r, e.Description)
 		e.Stars = loadStars(e.Keyword)
@@ -259,7 +259,7 @@ func keywordByKeywordHandler(w http.ResponseWriter, r *http.Request) {
 	keyword := mux.Vars(r)["keyword"]
 	row := db.QueryRow(`SELECT * FROM entry WHERE keyword = ?`, keyword)
 	e := Entry{}
-	err := row.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt)
+	err := row.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt, &e.KeywordLength)
 	if err == sql.ErrNoRows {
 		notFound(w)
 		return
@@ -296,7 +296,7 @@ func keywordByKeywordDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	row := db.QueryRow(`SELECT * FROM entry WHERE keyword = ?`, keyword)
 	e := Entry{}
-	err := row.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt)
+	err := row.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt, &e.KeywordLength)
 	if err == sql.ErrNoRows {
 		notFound(w)
 		return
@@ -311,13 +311,13 @@ func htmlify(w http.ResponseWriter, r *http.Request, content string) string {
 		return ""
 	}
 	rows, err := db.Query(`
-		SELECT * FROM entry ORDER BY CHARACTER_LENGTH(keyword) DESC
+		SELECT * FROM entry ORDER BY keyword_length DESC
 	`)
 	panicIf(err)
 	entries := make([]*Entry, 0, 500)
 	for rows.Next() {
 		e := Entry{}
-		err := rows.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt)
+		err := rows.Scan(&e.ID, &e.AuthorID, &e.Keyword, &e.Description, &e.UpdatedAt, &e.CreatedAt, &e.KeywordLength)
 		panicIf(err)
 		entries = append(entries, &e)
 	}

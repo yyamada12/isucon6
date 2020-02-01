@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -53,6 +54,7 @@ func forbidden(w http.ResponseWriter) {
 
 func panicIf(err error) {
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 }
